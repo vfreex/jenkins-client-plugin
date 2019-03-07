@@ -117,8 +117,10 @@ public class OcWatch extends AbstractStepImpl {
 
                     master:
                     while (true) {
+                        listener.getLogger().println("yuxzhu: Launching oc watch");
                         Launcher.ProcStarter ps = launcher.launch().cmds(Arrays.asList(command)).envs(envVars).pwd(filePath).quiet(true).stdout(bos).stderr(bos);
                         proc = ps.start();
+                        listener.getLogger().println("yuxzhu: oc watch started");
 
                         long reCheckSleep = 250;
                         int outputSize = 0;
@@ -192,9 +194,11 @@ public class OcWatch extends AbstractStepImpl {
                             }
                             listener.getLogger().println("Checking watch output and running watch closure again in " + reCheckSleep + "ms having processed " + outputSize + " bytes of watch output so far");
                             Thread.sleep(reCheckSleep);
-
+                            listener.getLogger().println("yuxzhu: After sleep.");
                         } while (proc.isAlive());
+                        listener.getLogger().println("yuxzhu: proc.isAlive() returned false. Joining the proc...");
                         exitStatus = ps.join();
+                        listener.getLogger().println("yuxzhu: oc watch exited with code " + exitStatus);
                         bos.flush();
 
                         // Reaching this point means that the watch terminated -
